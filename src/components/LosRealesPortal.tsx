@@ -315,12 +315,12 @@ function PanelPlan() {
 
       {open && (
         <div
-          className="fixed inset-0 z-[80] flex items-end justify-center p-3 pb-[max(0.75rem,env(safe-area-inset-bottom,0px))] sm:items-center sm:p-6"
+          className="fixed inset-0 z-[80] flex items-center justify-center overflow-y-auto overflow-x-hidden overscroll-contain pt-[max(0.75rem,env(safe-area-inset-top,0px))] pb-[max(0.75rem,env(safe-area-inset-bottom,0px))] pl-[max(0.75rem,env(safe-area-inset-left,0px))] pr-[max(0.75rem,env(safe-area-inset-right,0px))] sm:p-6"
           role="presentation"
         >
           <button
             type="button"
-            className="absolute inset-0 bg-[rgba(4,5,12,0.72)] backdrop-blur-[6px]"
+            className="fixed inset-0 bg-[rgba(4,5,12,0.72)] backdrop-blur-[6px]"
             aria-label="Cerrar detalle del día"
             onClick={() => setOpen(null)}
           />
@@ -328,16 +328,16 @@ function PanelPlan() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="plan-day-dialog-title"
-            className="relative z-[1] flex max-h-[min(88dvh,40rem)] w-full max-w-lg flex-col overflow-hidden rounded-2xl border border-eh-cream/12 shadow-[0_24px_80px_rgba(0,0,0,0.55)] liquid-glass-strong"
+            className="relative z-[1] my-auto flex w-[min(100%,36rem)] max-w-lg max-h-[min(42rem,calc(100dvh-1.25rem-env(safe-area-inset-top)-env(safe-area-inset-bottom)))] flex-col overflow-hidden rounded-2xl border border-eh-cream/12 shadow-[0_24px_80px_rgba(0,0,0,0.55)] liquid-glass-strong"
           >
-            <div className="flex shrink-0 items-start justify-between gap-3 border-b border-eh-cream/10 px-5 py-4 sm:px-6">
+            <div className="flex shrink-0 items-start justify-between gap-3 border-b border-eh-cream/10 px-4 py-3.5 sm:px-6 sm:py-4">
               <div className="min-w-0 pt-0.5">
                 <p className="text-[11px] font-medium uppercase tracking-wider text-eh-cream/45">
                   {open.weekLabel} · {open.weekSublabel}
                 </p>
                 <h2
                   id="plan-day-dialog-title"
-                  className="mt-1.5 font-mono text-lg font-semibold tracking-tight text-eh-cream"
+                  className="mt-1.5 font-mono text-lg font-semibold tracking-tight text-eh-cream sm:text-xl"
                 >
                   {open.day.dia}
                 </h2>
@@ -352,29 +352,32 @@ function PanelPlan() {
                 <X className="size-5" strokeWidth={1.75} aria-hidden />
               </button>
             </div>
-            <div className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain px-5 py-5 sm:px-6 sm:py-6">
-              <p className="text-[15px] font-medium leading-snug text-eh-cream/92">
-                {open.day.texto}
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain px-4 py-4 sm:px-6 sm:py-6">
+              <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-eh-accent/90">
+                Qué hacer ese día
               </p>
-              <div className="mt-3 flex items-center gap-2">
-                <MotorDot k={open.day.motor} />
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-eh-cream/50">
-                  {open.day.motor === "dinero"
-                    ? "Enfoque: ventas / WhatsApp"
-                    : open.day.motor === "crecimiento"
-                      ? "Enfoque: alcance y nuevos ojos"
-                      : open.day.motor === "autoridad"
-                        ? "Enfoque: confianza y prestigio"
-                        : "Enfoque mixto"}
-                </span>
-              </div>
-              <div className="mt-8 border-t border-eh-cream/10 pt-8">
-                <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-eh-accent/90">
-                  Qué hacer ese día (paso a paso)
+              <p className="mt-3 text-[15px] leading-relaxed text-eh-cream/88 sm:text-base">
+                {open.day.detalle}
+              </p>
+              <div className="mt-8 border-t border-eh-cream/10 pt-6">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-eh-cream/40">
+                  Resumen (equipo / marketing)
                 </p>
-                <p className="mt-4 text-sm leading-relaxed text-eh-cream/78">
-                  {open.day.detalle}
+                <p className="mt-2 text-sm font-medium leading-snug text-eh-cream/72">
+                  {open.day.texto}
                 </p>
+                <div className="mt-3 flex flex-wrap items-center gap-2">
+                  <MotorDot k={open.day.motor} />
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-eh-cream/50">
+                    {open.day.motor === "dinero"
+                      ? "Enfoque: ventas / WhatsApp"
+                      : open.day.motor === "crecimiento"
+                        ? "Enfoque: alcance y nuevos ojos"
+                        : open.day.motor === "autoridad"
+                          ? "Enfoque: confianza y prestigio"
+                          : "Enfoque mixto"}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
