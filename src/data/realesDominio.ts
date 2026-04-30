@@ -53,17 +53,21 @@ export type MotorKey =
   | "autoridad"
   | "mixto";
 
+/** Un día publicable del calendario — `texto` es el resumen; `detalle` explica qué hacer en lenguaje claro. */
+export interface PlanDay {
+  dia: string;
+  texto: string;
+  motor: MotorKey;
+  detalle: string;
+}
+
 export interface PlanWeek {
   semana: number;
   label: string;
   sublabel: string;
   /** Color línea/accent */
   tint: string;
-  dias: Array<{
-    dia: string;
-    texto: string;
-    motor: MotorKey;
-  }>;
+  dias: PlanDay[];
 }
 
 export const planDistribucion = {
@@ -93,24 +97,32 @@ export const plan30Semanas: PlanWeek[] = [
         texto:
           "Prueba brutal: gancho visual 0–1 s + contraste real si hay",
         motor: "dinero",
+        detalle:
+          "Hoy publican un reel muy corto pensado para los primeros segundos: en cuanto empiece el video tiene que pasar algo que detenga el dedo (contraste fuerte, movimiento claro, o un antes/después real en el lugar). No es un comercial bonito: es probar si la gente se queda a ver. Si tienen material de cuando el salón estaba vacío y luego lleno, úsenlo. Al final del día anoten: ¿cuánta gente lo vio y cuántos escribieron o preguntaron algo?",
       },
       {
         dia: "D2",
         texto:
           'Stories serie 3 tapas — CTA “fecha + personas” WA (Zeigarnik)',
         motor: "dinero",
+        detalle:
+          "Hacen tres historias seguidas como si fuera una mini-serie (por ejemplo: preparación, llegada al lugar, y la tercera cortada a medias para generar curiosidad). La idea es que quien ve el segundo quiera el tercero. En la última historia dejan escrito que para fecha y número de personas escriban al WhatsApp del grupo (número claro). Zeigarnik es solo eso: dejar la historia incompleta para que quieran el siguiente paso. Revisan que alguien del equipo esté listo para contestar ese día.",
       },
       {
         dia: "D4",
         texto:
           "Cover viral: mismo audio 2 ganchos (curiosidad + firma)",
         motor: "crecimiento",
+        detalle:
+          "Eligen una canción o audio que ya mucha gente reconozca en redes (trend). Arman un solo reel usando ese audio con dos “entradas” mentales: primero algo que genere curiosidad (“¿y si…?”) y después que se note que son Los Reales (su estilo, su ciudad, su sello). No tienen que cerrar venta en el comentario: este día es para que personas nuevas los descubran. Si pueden, anoten vistas y guardados para comparar después.",
       },
       {
         dia: "D7",
         texto:
           "Urgencia real: solo si agenda lo respalda — evitar falsas escaseces",
         motor: "dinero",
+        detalle:
+          "Solo hoy pueden hablar de “fechas que se van” o “poco cupo” si es verdad mirando la agenda. Si no es real, no lo digan: daña la confianza. El contenido puede ser story o post diciendo qué fechas o meses ya van ocupados y que escriban al WhatsApp para ver disponibilidad. Objetivo: que alguien tome acción (mensaje) por miedo sano a quedarse fuera, no por truco vacío.",
       },
     ],
   },
@@ -125,24 +137,32 @@ export const plan30Semanas: PlanWeek[] = [
         texto:
           "Demostración poder: silencio → pista — sin spoiler en portada",
         motor: "dinero",
+        detalle:
+          "El video empieza cuando el ambiente todavía no está prendido (gente sentada, pista fría) y después muestran el salto a cuando ya todos bailan. Importante: la portada o primer frame del reel NO debe adelantar el final alegre; si no, se pierde el efecto sorpresa. Con esto responden en silencio a la duda de muchos clientes: “¿de verdad levantan el evento?”. Editen corto y claro.",
       },
       {
         dia: "D10",
         texto:
           'Versatilidad: corrido→cumbia (destruye “no se adaptan”)',
         motor: "dinero",
+        detalle:
+          "Graben o editen un clip donde se vea un cambio de estilo en vivo (por ejemplo de corrido a cumbia) sin parar la fiesta. Sirve para la familia o el comité que dice “no sé si tocan lo nuestro”. No hace falta discurso largo: el oído y la imagen hacen el trabajo. Si pueden, subtítulo simple explicando el cambio para quien ve sin audio.",
       },
       {
         dia: "D12",
         texto:
           "Reto/trend: audio propio regional (no solo moda ajena)",
         motor: "crecimiento",
+        detalle:
+          "Participan en un reto o tendencia de redes, pero conectado con Villahermosa o con su sonido (no solo copiar lo que hace gente de otros lados). Puede ser baile, frase, o formato viral de moda. La meta es verse actuales y locales a la vez. Definan antes quién graba y quién sube para no duplicar o perder el día.",
       },
       {
         dia: "D14",
         texto:
           "Testimonio con nombre/contexto — audio > solo screenshot",
         motor: "dinero",
+        detalle:
+          "Publican prueba de alguien que ya los contrató: ideal video corto o nota de voz del cliente/coordinador diciendo qué pasó (tipo de evento, cómo se sintió, recomendación). Si solo tienen captura de pantalla de un mensaje, súmenle contexto en texto o voz encima. “Nombre real o apellido + tipo de evento” ayuda más que un “muy buenos” anónimo.",
       },
     ],
   },
@@ -157,23 +177,31 @@ export const plan30Semanas: PlanWeek[] = [
         texto:
           'Historia Natanael: pico-emoción + cierre (“qué cambió después”)',
         motor: "autoridad",
+        detalle:
+          "No basta con decir “abrimos para fulano”. Cuéntenlo como historia: qué estaba en juego, el momento más fuerte en tarima, qué sintieron y qué aprendieron o qué cambió después para el grupo. Puede ser voz en off + fotos o video del evento. Esto construye respeto y memoria; es contenido de autoridad, no de moda pasajera.",
       },
       {
         dia: "D17",
         texto:
           "BTS soundcheck — humaniza (liking / reciprocidad antes del pitch)",
         motor: "dinero",
+        detalle:
+          "“BTS” = detrás de escena: ensayo, prueba de sonido, afinación, risas, errores leves. La gente contrata personas, no logos perfectos. Suben algo humano antes de volver a hablar de fechas o precios. Objetivo: que quien vea sienta cercanía y confianza (reciprocidad: ustedes muestran algo real, el público se inclina a escucharlos después).",
       },
       {
         dia: "D18",
         texto:
           "Mashup 60 s: 3 géneros; subtítulos grandes (silent scroll)",
         motor: "crecimiento",
+        detalle:
+          "Arman un video de alrededor de un minuto donde pasen tres géneros distintos (fragmentos cortos seguidos). Mucha gente ve reels en silencio: usen letras grandes en pantalla que digan el género o una frase pegajosa. Sirve para demostrar rango musical sin un comercial aburrido.",
       },
       {
         dia: "D21",
         texto: "Precio-tabla story: framing; detalle solo por WA",
         motor: "dinero",
+        detalle:
+          "En historias pueden mostrar una tabla o rangos simples de precios para orientar (por ejemplo “desde / hasta” o paquetes A-B). Eso enmarca expectativas y filtra curiosos. Los detalles finos, descuentos y condiciones solo por WhatsApp o llamada, no en debate público en comentarios. Alguien del equipo debe tener las respuestas listas ese día.",
       },
     ],
   },
@@ -188,24 +216,32 @@ export const plan30Semanas: PlanWeek[] = [
         texto:
           "Best-of 90 s: solo clips ya probados — no nuevo por nuevo",
         motor: "crecimiento",
+        detalle:
+          "Montan un video de hasta 90 segundos reutilizando solo fragmentos de reels o clips que ya les funcionó (más vistas, más mensajes o más guardados). No inventan contenido nuevo ese día: es ordenar lo bueno en un solo “greatest hits”. Así refuerzan lo que ya saben que conecta con su público.",
       },
       {
         dia: "D24",
         texto:
           "Urgencia fechas peak (verdadera) + mismo día DM activo",
         motor: "dinero",
+        detalle:
+          "Si tienen fechas fuertes (temporada de XV, diciembre, feriados, etc.) ya tomadas o casi llenas, lo comunican con honestidad. Ese mismo día alguien debe estar pendiente del WhatsApp/Instagram para contestar rápido a quien pregunte. La urgencia solo funciona si la respuesta es rápida y real.",
       },
       {
         dia: "D27",
         texto:
           "2.º testimonio + clip mismo evento ambiente si existe",
         motor: "dinero",
+        detalle:
+          "Segundo testimonio distinto al primero: otra persona u otro tipo de evento. Si tienen video del ambiente de ese mismo evento (gente bailando, luces), mézclenlo con la voz o el mensaje del cliente. Refuerza que el testimonio no es inventado y que el resultado se ve en la pista.",
       },
       {
         dia: "D29",
         texto:
           "Cover siguiente hit — medir saves vs reel anterior",
         motor: "crecimiento",
+        detalle:
+          "Otro cover de una canción que esté pegando ahora. Anoten en una hoja o nota del celular cuántos guardados y compartidos tuvo comparado con el cover que subieron antes en el plan. No es vanidad: es aprender qué tipo de rola les trae más alcance útil para el siguiente mes.",
       },
     ],
   },

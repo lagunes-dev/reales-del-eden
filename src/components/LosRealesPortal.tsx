@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   CalendarDays,
   LayoutDashboard,
@@ -7,6 +7,7 @@ import {
   Music,
   Sparkles,
   UsersRound,
+  X,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import {
@@ -27,6 +28,7 @@ import {
   sistemaDineroAmplio,
   tableroDeck,
   type MotorKey,
+  type PlanDay,
 } from "../data/realesDominio";
 import { CustomCursorEh } from "./CustomCursorEh";
 import { MusicParticleField } from "./MusicParticleField";
@@ -202,7 +204,32 @@ function PanelMarco() {
   );
 }
 
+type PlanDayModal = {
+  id: string;
+  weekLabel: string;
+  weekSublabel: string;
+  day: PlanDay;
+};
+
 function PanelPlan() {
+  const [open, setOpen] = useState<PlanDayModal | null>(null);
+  const closeBtnRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(null);
+    };
+    document.addEventListener("keydown", onKey);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    queueMicrotask(() => closeBtnRef.current?.focus());
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [open]);
+
   return (
     <div className="space-y-12">
       <div className="rounded-3xl p-8 liquid-glass-strong">
@@ -246,26 +273,114 @@ function PanelPlan() {
             </div>
           </div>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {wk.dias.map((d) => (
-              <article
-                key={`${wk.semana}-${d.dia}`}
-                className="flex min-h-[8.5rem] flex-col rounded-2xl p-4 liquid-glass"
-                style={{ borderLeft: `4px solid ${hexByMotor(d.motor)}` }}
-              >
-                <div className="flex items-center justify-between gap-2">
-                  <span className="text-[11px] font-bold uppercase text-eh-cream/90">
-                    {d.dia}
+            {wk.dias.map((d) => {
+              const id = `${wk.semana}-${d.dia}`;
+              const isOpen = open?.id === id;
+              return (
+                <button
+                  key={id}
+                  type="button"
+                  onClick={() =>
+                    setOpen({
+                      id,
+                      weekLabel: wk.label,
+                      weekSublabel: wk.sublabel,
+                      day: d,
+                    })
+                  }
+                  aria-haspopup="dialog"
+                  aria-expanded={isOpen}
+                  aria-label={`Explicación detallada de ${d.dia}: ${d.texto}`}
+                  className="group flex min-h-[9.5rem] flex-col rounded-2xl p-4 text-left transition-[background-color,box-shadow,transform] duration-200 ease-out liquid-glass motion-safe:hover:bg-eh-cream/[0.06] motion-safe:active:scale-[0.99] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-eh-accent/70"
+                  style={{ borderLeft: `4px solid ${hexByMotor(d.motor)}` }}
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-[11px] font-bold uppercase text-eh-cream/90">
+                      {d.dia}
+                    </span>
+                    <MotorDot k={d.motor} />
+                  </div>
+                  <p className="mt-3 flex-1 text-[13px] leading-snug text-eh-cream/78">
+                    {d.texto}
+                  </p>
+                  <span className="mt-3 text-[10px] font-medium tracking-wide text-eh-accent/85 group-hover:text-eh-accent">
+                    Toca para ver qué hacer →
                   </span>
-                  <MotorDot k={d.motor} />
-                </div>
-                <p className="mt-3 flex-1 text-[13px] leading-snug text-eh-cream/78">
-                  {d.texto}
-                </p>
-              </article>
-            ))}
+                </button>
+              );
+            })}
           </div>
         </div>
       ))}
+
+      {open && (
+        <div
+          className="fixed inset-0 z-[80] flex items-end justify-center p-3 pb-[max(0.75rem,env(safe-area-inset-bottom,0px))] sm:items-center sm:p-6"
+          role="presentation"
+        >
+          <button
+            type="button"
+            className="absolute inset-0 bg-[rgba(4,5,12,0.72)] backdrop-blur-[6px]"
+            aria-label="Cerrar detalle del día"
+            onClick={() => setOpen(null)}
+          />
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="plan-day-dialog-title"
+            className="relative z-[1] flex max-h-[min(88dvh,40rem)] w-full max-w-lg flex-col overflow-hidden rounded-2xl border border-eh-cream/12 shadow-[0_24px_80px_rgba(0,0,0,0.55)] liquid-glass-strong"
+          >
+            <div className="flex shrink-0 items-start justify-between gap-3 border-b border-eh-cream/10 px-5 py-4 sm:px-6">
+              <div className="min-w-0 pt-0.5">
+                <p className="text-[11px] font-medium uppercase tracking-wider text-eh-cream/45">
+                  {open.weekLabel} · {open.weekSublabel}
+                </p>
+                <h2
+                  id="plan-day-dialog-title"
+                  className="mt-1.5 font-mono text-lg font-semibold tracking-tight text-eh-cream"
+                >
+                  {open.day.dia}
+                </h2>
+              </div>
+              <button
+                ref={closeBtnRef}
+                type="button"
+                onClick={() => setOpen(null)}
+                className="shrink-0 rounded-xl p-2 text-eh-cream/70 transition-colors hover:bg-eh-cream/10 hover:text-eh-cream focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-eh-accent/70"
+                aria-label="Cerrar"
+              >
+                <X className="size-5" strokeWidth={1.75} aria-hidden />
+              </button>
+            </div>
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain px-5 py-5 sm:px-6 sm:py-6">
+              <p className="text-[15px] font-medium leading-snug text-eh-cream/92">
+                {open.day.texto}
+              </p>
+              <div className="mt-3 flex items-center gap-2">
+                <MotorDot k={open.day.motor} />
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-eh-cream/50">
+                  {open.day.motor === "dinero"
+                    ? "Enfoque: ventas / WhatsApp"
+                    : open.day.motor === "crecimiento"
+                      ? "Enfoque: alcance y nuevos ojos"
+                      : open.day.motor === "autoridad"
+                        ? "Enfoque: confianza y prestigio"
+                        : "Enfoque mixto"}
+                </span>
+              </div>
+              <div className="mt-8 border-t border-eh-cream/10 pt-8">
+                <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-eh-accent/90">
+                  Qué hacer ese día (paso a paso)
+                </p>
+                <p className="mt-4 text-sm leading-relaxed text-eh-cream/78">
+                  {open.day.detalle}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <p className="text-center text-xs font-semibold italic text-amber-100/85">
         {planDistribucion.footerGold}
       </p>
