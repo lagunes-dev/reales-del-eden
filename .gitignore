@@ -1,18 +1,28 @@
-# — bloom-web / Node
-**/node_modules/
-**/dist/
-**/.astro/
+# build output
+dist/
+.astro/
+
+# dependencies
+node_modules/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 *.log
 
-# Variables de entorno
+# environment variables
 .env
 .env.*
 !.env.example
+.env.production
 
-# SO / IDE
+# macOS / IDE
 .DS_Store
 .idea/
 *.sw?
 
-# Decks binarios grandes (regenerables con node build-reales-deck.js)
+# Office / decks (fuera del sitio web)
 *.pptx
+~$*.pptx
