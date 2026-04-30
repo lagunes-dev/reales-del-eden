@@ -1,0 +1,388 @@
+/* Editorial stack (portfolio-eh) + Tailwind — Los Reales */
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@300;400&display=swap");
+
+@import "tailwindcss";
+
+:root {
+  /* Luxury dark — alineado a portfolio-eh */
+  --eh-bg: #06060e;
+  --eh-bg-soft: #0e0e17;
+  /** Crema tirando a papel — más lectura sobre velos violeta/negros */
+  --eh-cream: #faf8f5;
+  --eh-text-muted: rgba(248, 247, 244, 0.62);
+  --eh-accent: #8b7cf6;
+  --eh-accent-soft: rgba(139, 124, 246, 0.2);
+  --eh-accent-glow: rgba(139, 124, 246, 0.12);
+  --eh-border: rgba(245, 240, 232, 0.08);
+  --eh-panel: rgba(250, 248, 242, 0.075);
+  /* ui-ux-pro-max: transiciones suaves 150–300ms */
+  --eh-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --eh-duration-fast: 180ms;
+  --eh-duration-base: 240ms;
+
+  --radius: 1rem;
+  --g-0: 0 0% 0%;
+  --g-4: 0 0% 4%;
+  --g-10: 0 0% 10%;
+  --g-35: 0 0% 35%;
+  --g-50: 0 0% 50%;
+  --g-80: 0 0% 80%;
+}
+
+@theme inline {
+  --font-sans:
+    "DM Sans", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji";
+  --font-serif:
+    "Cormorant Garamond", ui-serif, Georgia, "Times New Roman", serif;
+  --font-mono:
+    "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+
+  --color-eh-bg: var(--eh-bg);
+  --color-eh-bg-soft: var(--eh-bg-soft);
+  --color-eh-cream: rgb(250 248 244);
+  --color-eh-accent: var(--eh-accent);
+
+  --radius-lg: var(--radius);
+}
+
+@layer base {
+  html {
+    @apply scroll-smooth antialiased;
+    background-color: var(--eh-bg);
+    color: var(--eh-cream);
+    overflow-x: clip;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  h1 em,
+  h1 i,
+  h2 em,
+  h2 i,
+  h3 em,
+  h3 i,
+  .font-serif-italic {
+    font-family: var(--font-serif), Georgia, serif;
+    font-style: italic;
+  }
+
+  ::-webkit-scrollbar {
+    width: 3px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--eh-bg);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--eh-accent-soft);
+    border-radius: 2px;
+  }
+  ::selection {
+    background: rgba(139, 124, 246, 0.35);
+    color: var(--eh-cream);
+  }
+
+  /* Foco solo teclado — WCAG (ui-ux-pro-max checklist) */
+  :where(button, a):focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  :where(button, a):focus-visible {
+    outline: 2px solid color-mix(in srgb, var(--eh-accent) 92%, transparent);
+    outline-offset: 3px;
+  }
+}
+
+@utility sr-only-eh {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Saltar al contenido — accesibilidad (ui-ux-pro-max / WCAG) */
+.eh-skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  padding: 0.75rem 1.25rem;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--eh-cream);
+  background-color: var(--eh-bg);
+  border-radius: 0.5rem;
+  border: 1px solid var(--eh-border);
+  text-decoration: none;
+  transition:
+    opacity var(--eh-duration-base) var(--eh-ease),
+    transform var(--eh-duration-base) var(--eh-ease);
+}
+
+.eh-skip-link:focus {
+  left: max(1rem, env(safe-area-inset-left, 0px));
+  top: max(1rem, env(safe-area-inset-top, 0px));
+  position: fixed;
+  outline: 2px solid var(--eh-accent);
+  outline-offset: 3px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+}
+
+/* Cursor personalizado — portfolio-eh (solo data-eh-custom-cursor=on en body) */
+body[data-eh-custom-cursor="on"] {
+  cursor: none !important;
+}
+
+#eh-cursor {
+  width: 10px;
+  height: 10px;
+  transform: translate(-50%, -50%);
+  border-radius: 9999px;
+  background-color: var(--eh-accent);
+  opacity: 0;
+  transition:
+    opacity 0.22s ease,
+    width var(--eh-duration-fast) var(--eh-ease),
+    height var(--eh-duration-fast) var(--eh-ease);
+}
+
+#eh-cursor-ring {
+  width: 38px;
+  height: 38px;
+  transform: translate(-50%, -50%);
+  border-radius: 9999px;
+  border: 1px solid rgba(139, 124, 246, 0.42);
+  opacity: 0;
+  transition:
+    opacity 0.22s ease,
+    width var(--eh-duration-base) var(--eh-ease),
+    height var(--eh-duration-base) var(--eh-ease),
+    border-color 300ms ease;
+}
+
+body[data-eh-custom-cursor="on"]:is(:has(a:hover), :has(button:hover), :has([role="tab"]:hover)) #eh-cursor {
+  width: 7px !important;
+  height: 7px !important;
+}
+
+body[data-eh-custom-cursor="on"]:is(:has(a:hover), :has(button:hover), :has([role="tab"]:hover)) #eh-cursor-ring {
+  width: 52px !important;
+  height: 52px !important;
+  border-color: rgba(139, 124, 246, 0.65);
+}
+
+@media (hover: none), (pointer: coarse) {
+  body[data-eh-custom-cursor="on"] {
+    cursor: auto !important;
+  }
+
+  body[data-eh-custom-cursor="on"] #eh-cursor,
+  body[data-eh-custom-cursor="on"] #eh-cursor-ring {
+    display: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body[data-eh-custom-cursor="on"] #eh-cursor,
+  body[data-eh-custom-cursor="on"] #eh-cursor-ring {
+    display: none !important;
+  }
+}
+
+/* Pestañas — scroll horizontal táctil */
+.eh-tab-track {
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+}
+
+.eh-tab-track > button {
+  scroll-snap-align: start;
+}
+
+@media (max-width: 639px) {
+  .eh-tab-track {
+    mask-image: linear-gradient(
+      90deg,
+      transparent,
+      black 12px,
+      black calc(100% - 12px),
+      transparent
+    );
+  }
+}
+.eh-layer-noise {
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='ehn'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23ehn)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity: 0.38;
+  mix-blend-mode: overlay;
+}
+
+.eh-layer-grid {
+  pointer-events: none;
+  opacity: 0.45;
+  background-image:
+    linear-gradient(rgba(139, 124, 246, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(139, 124, 246, 0.05) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: radial-gradient(
+    ellipse 85% 70% at 50% 40%,
+    black 25%,
+    transparent 72%
+  );
+}
+
+.eh-line-gold {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(139, 124, 246, 0.42),
+    transparent
+  );
+}
+
+/* Etiqueta sección — mono + acento (portfolio) */
+.eh-section-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(139, 124, 246, 0.75);
+}
+
+
+/* Entrada panel al cambiar pestaña — fade-in + blur (portfolio reveal) */
+@keyframes eh-panel-enter {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+    filter: blur(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+.eh-panel-enter {
+  animation: eh-panel-enter 0.62s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eh-panel-enter {
+    animation: none;
+    filter: none;
+    transform: none;
+  }
+}
+
+@layer components {
+  /* Cristal: mezcla liquid-glass + bordes crema/violeta del portfolio */
+  .liquid-glass {
+    background: var(--eh-panel);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid var(--eh-border);
+    box-shadow:
+      inset 0 1px 0 rgba(245, 240, 232, 0.06),
+      0 8px 32px rgba(0, 0, 0, 0.25);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .liquid-glass::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      135deg,
+      rgba(245, 240, 232, 0.18) 0%,
+      rgba(139, 124, 246, 0.12) 42%,
+      rgba(245, 240, 232, 0.05) 100%
+    );
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  .liquid-glass-strong {
+    background:
+      linear-gradient(
+        145deg,
+        rgba(139, 124, 246, 0.12) 0%,
+        rgba(245, 240, 232, 0.07) 45%,
+        rgba(22, 24, 40, 0.78) 100%
+      ),
+      rgba(250, 248, 244, 0.06);
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+    border: 1px solid rgba(139, 124, 246, 0.18);
+    box-shadow:
+      0 16px 48px rgba(0, 0, 0, 0.42),
+      inset 0 1px 0 rgba(245, 240, 232, 0.08),
+      0 0 60px rgba(139, 124, 246, 0.06);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .liquid-glass-strong::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1.2px;
+    background: linear-gradient(
+      170deg,
+      rgba(245, 240, 232, 0.35) 0%,
+      rgba(139, 124, 246, 0.28) 35%,
+      rgba(245, 240, 232, 0.08) 65%,
+      rgba(245, 240, 232, 0.22) 100%
+    );
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  .eh-chip {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 300;
+    letter-spacing: 0.06em;
+    padding: 4px 10px;
+    border: 1px solid rgba(139, 124, 246, 0.28);
+    border-radius: 3px;
+    color: rgba(139, 124, 246, 0.88);
+  }
+
+  .eh-brand-ring {
+    box-shadow:
+      0 0 0 1px rgba(139, 124, 246, 0.22),
+      0 0 28px rgba(139, 124, 246, 0.12);
+  }
+}

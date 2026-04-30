@@ -1,0 +1,35 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "Los Reales del Edén — Portal operativo",
+  description = "Plan de contenido, tablero e hitos de acción.",
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <meta name="theme-color" content="#06060e" />
+    <title>{title}</title>
+  </head>
+  <body
+    class="min-h-dvh min-h-[100dvh] overflow-x-clip bg-eh-bg font-sans font-light text-eh-cream antialiased"
+  >
+    <slot />
+  </body>
+</html>
